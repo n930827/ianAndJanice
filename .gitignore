@@ -1,0 +1,58 @@
+# Logs (日誌檔)
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+firebase-debug.log*
+
+# Node modules (依賴套件 - 絕對不要上傳，體積巨大)
+node_modules
+.npm
+.yarn-integrity
+
+# Build Output (Vite 打包後的產物)
+dist
+dist-ssr
+coverage
+
+# Editor directories and files (編輯器設定檔)
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs
+*.njsproj
+*.sln
+*.sw?
+
+# Environment Variables (環境變數 - 資安關鍵！)
+# 這裡放的是你的 Firebase API Key 等敏感資訊，千萬不能上傳
+.env
+.env.local
+.env.*.local
+# 如果你有測試環境或正式環境的特定 local 設定
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Firebase
+# Firebase 本地快取與模擬器資料
+.firebase/
+# runtimeconfig 通常用於 Cloud Functions
+.runtimeconfig.json
+
+# Tailwind / PostCSS (如果有產出暫存檔)
+.sass-cache/
+
+# Testing
+/test/e2e/reports
+/test/e2e/videos
+/test/e2e/screenshots
+
+# CI/CD (GitHub Actions)
+# 注意：我們 "不" 忽略 .github 資料夾，因為 CI/CD 流程需要上傳
+# 但如果有一些本地測試的 secret 檔案可以寫在這裡
