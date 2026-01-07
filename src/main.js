@@ -1,5 +1,12 @@
 import { createApp } from 'vue'
-import './style.css'
+import { createPinia } from 'pinia'
 import App from './App.vue'
+import router from './router'
+import './assets/scss/main.scss'
+import { initAuth } from './composables/useAuth'
 
-createApp(App).mount('#app')
+const app = createApp(App)
+app.use(createPinia())
+app.use(router)
+
+initAuth().then(() => { app.mount('#app') })
