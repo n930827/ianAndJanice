@@ -1,16 +1,14 @@
+// src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
-// 引入你的頁面組件
-import Home from '@/views/Home.vue';
-import Login from '@/views/Login.vue';
-// 引入 Auth 邏輯，用來檢查使用者是否已登入
-import { useAuth } from '@/composables/useAuth';
+import Home from '@/views/Home.vue'; // 確保路徑正確
+import Login from '@/views/Login.vue'; // 確保路徑正確
+import { auth } from '@/api/firebase'; // <--- 1. 確保引入 auth
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home,
-    // meta 欄位用來標記這個頁面「需要登入」才能看
     meta: { requiresAuth: true }
   },
   {
@@ -21,26 +19,28 @@ const routes = [
 ];
 
 const router = createRouter({
-  // 使用 HTML5 History 模式 (網址不會有 # 字號)
   history: createWebHistory(),
   routes
 });
 
-// 全域路由守衛 (每一次換頁前都會執行這裡)
+// 2. 修改路由守衛
 router.beforeEach((to, from, next) => {
-  const { user } = useAuth();
-  
-  // 情況 1: 去的頁面需要權限 (requiresAuth)，但使用者沒登入 (!user.value)
-  if (to.meta.requiresAuth && !user.value) {
-    // -> 踢回登入頁
+  // 直接抓取當下最即時的 Firebase 使用者狀態
+  const currentUser = auth.currentUser; 
+
+  console.log(`路由切換: 去哪裡? ${to.path}, 有登入嗎? ${!!currentUser}`); // <--- 除錯用
+
+  // 情況 A: 要去首頁 (需要權限) 且 沒登入 -> 踢回登入頁
+  if (to.meta.requiresAuth && !currentUser) {
+    console.log("被擋住了：沒登入不能去首頁");
     next('/login');
   } 
-  // 情況 2: 使用者已經登入了，卻還想去登入頁 (path === '/login')
-  else if (to.path === '/login' && user.value) {
-    // -> 踢回首頁 (不用再登入了)
+  // 情況 B: 已經登入了 卻還想去登入頁 -> 踢回首頁
+  else if (to.path === '/login' && currentUser) {
+    console.log("已登入，強制導向首頁");
     next('/');
   } 
-  // 其他情況: 放行
+  // 情況 C: 其他狀況 -> 放行
   else {
     next();
   }
